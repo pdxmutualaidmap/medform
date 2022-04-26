@@ -1,0 +1,16 @@
+{
+  "name": "medform",
+  "version": "0.0.1",
+  "description": "Simple frontend and serverless code for logging medical care data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zackluispatterson@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "serverless-cloudfront-invalidate": "1.11.0",
+    "serverless-domain-manager": "6.0.3",
+    "serverless-s3-sync": "3.0.0"
+  }
+}

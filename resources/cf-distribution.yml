@@ -1,0 +1,40 @@
+Resources:
+  CFDistribution:
+    Type: 'AWS::CloudFront::Distribution'
+    DependsOn:
+      - MedformSiteBucket
+      - CloudFrontOriginAccessIdentity
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - '${env:MEDFORM_DOMAIN_NAME}'
+        Origins:
+          - DomainName: !GetAtt MedformSiteBucket.DomainName
+            OriginPath: ''
+            Id: MedformSiteBucketOrigin
+            S3OriginConfig:
+              OriginAccessIdentity:
+                Fn::Join:
+                  - ''
+                  - - 'origin-access-identity/cloudfront/'
+                    - !Ref CloudFrontOriginAccessIdentity
+        Comment: 'CloudFront origin for ${env:MEDFORM_DOMAIN_NAME}'
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          TargetOriginId: MedformSiteBucketOrigin
+          Compress: true
+          ForwardedValues:
+            QueryString: 'false'
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: 'true'
+        HttpVersion: 'http2'
+        PriceClass: 'PriceClass_100'
+        ViewerCertificate:
+          AcmCertificateArn: 'arn:aws:acm:us-east-1:${env:AWS_ACCOUNT_ID}:certificate/${env:MEDFORM_ACM_CERT_ID}'
+          SslSupportMethod: sni-only

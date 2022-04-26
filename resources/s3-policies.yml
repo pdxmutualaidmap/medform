@@ -1,0 +1,31 @@
+Resources:
+  MedformSiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn:
+      - CloudFrontOriginAccessIdentity
+      - MedformSiteBucket
+    Properties:
+      Bucket:
+        Ref: MedformSiteBucket
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::Join:
+                  - ' '
+                  - - 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity'
+                    - !Ref CloudFrontOriginAccessIdentity
+            Action:
+              - s3:GetObject
+            Resource:
+              - Fn::Join: [
+                  '', [
+                    'arn:aws:s3:::',
+                    {
+                      'Ref': 'MedformSiteBucket'
+                    },
+                    '/*'
+                  ]
+                ]

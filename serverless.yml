@@ -1,0 +1,63 @@
+service: medform
+useDotenv: true
+frameworkVersion: '3'
+
+plugins:
+  - serverless-domain-manager
+  - serverless-s3-sync
+  - serverless-cloudfront-invalidate
+
+custom:
+  customDomain:
+    domainName: ${env:MEDFORM_DOMAIN_NAME}
+    basePath: api
+    certificateName: ${env:MEDFORM_ACM_CERT_NAME}
+    createRoute53Record: false
+    createRoute53IPv6Record: false
+    apiType: http
+    endpointType: regional
+  domainName: ${env:MEDFORM_DOMAIN_NAME}
+  cloudfrontInvalidate:
+    distributionIdKey: 'CloudFrontDistributionId'
+    items:
+      - '/index.html'
+  s3Sync:
+    - bucketName: ${env:MEDFORM_BUCKET_NAME}
+      localDir: static
+
+provider:
+  architecture: arm64
+  name: aws
+  profile: ${env:AWS_PROFILE, 'default'}
+  runtime: 'nodejs14.x'
+  region: ${env:AWS_REGION}
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    DEBUG_ENABLED: ${env:DEBUG_ENABLED}
+  iam:
+    role:
+      name: medform-api-role
+      statements:
+        - Effect: 'Allow'
+          Resource: 'arn:aws:dynamodb:${env:AWS_REGION}:${env:AWS_ACCOUNT_ID}:table/${env:MEDFORM_TABLE_NAME}'
+          Action: 'dynamodb:UpdateItem'
+        - Effect: 'Allow'
+          Resource:
+            - 'arn:aws:secretsmanager:${env:AWS_REGION}:${env:AWS_ACCOUNT_ID}:secret:medform-2fa-seed*'
+          Action: 'secretsmanager:GetSecretValue'
+
+functions:
+  add-care-record:
+    handler: src/care/addCareRecord.handler
+    events:
+      - http:
+          path: care
+          method: post
+
+resources:
+  - ${file(resources/cf-oai.yml)}
+  - ${file(resources/s3-bucket.yml)}
+  - ${file(resources/s3-policies.yml)}
+  - ${file(resources/r53-a-record.yml)}
+  - ${file(resources/cf-distribution.yml)}
+  - ${file(resources/outputs.yml)}

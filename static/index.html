@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <title>PDX Mutual Aid Maps Medform</title>
+    <meta name="author" content="zackluispatterson@gmail.com">
+    <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-3.2.0.min.css" />
+    <link rel="stylesheet" href="medform.css" />
+  </head>
+  <body>
+    <div class="medform-container">
+      <form class="p-form p-form--stacked">
+        <h2>Med Tent Care Form</h2>
+        <fieldset>
+          <div class="p-form__group row">
+            <div class="col-4">
+              <label class="p-form__label" for="patient-info">Patient Information</label>
+            </div>
+            <div class="col-8">
+              <div class="p-form__control">
+                <input type="text" id="patient-info" name="patient-info" placeholder="Patient Information" autocomplete="name">
+              </div>
+            </div>
+          </div>
+          <div class="p-form__group row">
+            <div class="col-4">
+              <label class="p-form__label" for="care-notes">Care Notes</label>
+            </div>
+            <div class="col-8">
+              <div class="p-form__control">
+                <textarea id="care-notes" name="care-notes" placeholder="Care Notes"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="p-form__group row">
+            <div class="col-4">
+              <label class="p-form__label" for="follow-up">Follow Up</label>
+            </div>
+            <div class="col-8">
+              <div class="p-form__control">
+                <textarea id="follow-up" name="follow-up" placeholder="Follow Up Notes"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <p>Materials Used</p>
+            <div id="materials-list-picker" class="p-form__group row">
+              <div class="col-12">
+                <div class="row">
+                  <datalist id="materials-datalist"></datalist>
+                  <div class="col-8">
+                    <div class="p-form__control">
+                      <input id="material-name" type="text" list="materials-datalist" name="material-name" />
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="p-form__control">
+                      <input id="material-quantity" type="number" name="material-quantity" placeholder="0" />
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <button id="add-material" class="p-button has-icon u-float-right u-align-center" onclick="addMaterial(event)" name="add-material">
+                      <i class="p-icon--plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <table aria-label="Materials used">
+              <thead>
+                <tr>
+                  <th>
+                    Name
+                  </th>
+                  <th>
+                    Quantity
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="materials-used-table-body">
+              </tbody>
+            </table>
+          </div>
+        </fieldset>
+        <div class="row">
+          <div class="col-12">
+            <button class="p-button u-float-left" onclick="clearForm(event)" name="clear">Clear</button>
+            <button class="p-button--positive u-float-right" onclick="submitForm(event)" name="submit">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+  <script src="medform.js"></script>
+</html>

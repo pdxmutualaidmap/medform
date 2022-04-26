@@ -1,0 +1,5 @@
+Resources:
+  MedformSiteBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: '${env:MEDFORM_BUCKET_NAME}'
