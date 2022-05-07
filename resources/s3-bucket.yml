@@ -1,5 +1,6 @@
 Resources:
   MedformSiteBucket:
     Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
     Properties:
       BucketName: '${env:MEDFORM_BUCKET_NAME}'

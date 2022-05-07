@@ -1,3 +1,19 @@
 .medform-container {
   padding: 26px;
 }
+
+#calendar-inputs {
+  display: none;
+}
+
+#add-calendar-btn {
+  display: inherit;
+}
+
+#remove-calendar-btn {
+  display: none;
+}
+
+.full-width {
+  width: 100%;
+}

@@ -1,0 +1,14 @@
+Resources:
+  DynamoCareTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: PatientInfo
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        -
+          AttributeName: PatientInfo
+          KeyType: HASH
+      TableName: MedformCare

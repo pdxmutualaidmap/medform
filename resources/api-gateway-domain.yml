@@ -1,0 +1,18 @@
+Resources:
+  MedformAPIDomainName:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      DomainName: ${env:MEDFORM_API_DOMAIN_NAME}
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      RegionalCertificateArn: 'arn:aws:acm:us-east-1:${env:AWS_ACCOUNT_ID}:certificate/${env:MEDFORM_ACM_CERT_ID}'
+      SecurityPolicy: TLS_1_2
+  MedformAPIDomainMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    DependsOn: MedformAPIDomainName
+    Properties:
+      ApiId: !Ref HttpApi
+      ApiMappingKey: !Ref MedformAPIDomainName
+      DomainName: ${env:MEDFORM_API_DOMAIN_NAME}
+      Stage: '$default'

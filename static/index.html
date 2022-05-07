@@ -1,7 +1,9 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>PDX Mutual Aid Maps Medform</title>
     <meta name="author" content="zackluispatterson@gmail.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-3.2.0.min.css" />
     <link rel="stylesheet" href="medform.css" />
   </head>
@@ -32,15 +34,58 @@
           </div>
           <div class="p-form__group row">
             <div class="col-4">
-              <label class="p-form__label" for="follow-up">Follow Up</label>
+              <label class="p-form__label" for="follow-up-notes">Follow Up</label>
             </div>
-            <div class="col-8">
+            <div class="col-6">
               <div class="p-form__control">
-                <textarea id="follow-up" name="follow-up" placeholder="Follow Up Notes"></textarea>
+                <textarea id="follow-up-notes" name="follow-up-notes" placeholder="Follow Up Notes"></textarea>
+              </div>
+            </div>
+            <div id="add-calendar-btn" class="col-2">
+              <button id="show-calendar-inputs" class="p-button is-inline full-width u-float-right" onclick="showCalendarInputs(event)" name="show-calendar-inputs">
+                Add Calendar Event
+              </button>
+            </div>
+            <div id="remove-calendar-btn" class="col-2">
+              <button id="hide-calendar-inputs" class="p-button is-inline full-width u-float-right" onclick="clearCalendarInputs(event)" name="hide-calendar-inputs">
+                Remove Calendar Event
+              </button>
+            </div>
+          </div>
+          <div id="calendar-inputs">
+            <input id="add-calendar-event-marker" type="checkbox" hidden>
+            <div class="p-form__group row">
+              <div class="col-4">
+                <label class="p-form__label" for="follow-up-notes">Event Title</label>
+              </div>
+              <div class="col-8">
+                <div class="p-form__control">
+                  <input id="follow-up-title" type="text" name="follow-up-title" value="Follow Up Event">
+                </div>
+              </div>
+            </div>
+            <div class="p-form__group row">
+              <div class="col-4">
+                <label class="p-form__label" for="follow-up-datetime">Event Date</label>
+              </div>
+              <div class="col-8">
+                <div class="p-form__control">
+                  <input id="follow-up-datetime" type="datetime-local" name="follow-up-datetime">
+                </div>
+              </div>
+            </div>
+            <div class="p-form__group row">
+              <div class="col-4">
+                <label class="p-form__label" for="follow-up-location">Event Location</label>
+              </div>
+              <div class="col-8">
+                <div class="p-form__control">
+                  <input id="follow-up-location" type="text" name="follow-up-location" value="JBL">
+                </div>
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="p-strip">
             <p>Materials Used</p>
             <div id="materials-list-picker" class="p-form__group row">
               <div class="col-12">
@@ -53,11 +98,11 @@
                   </div>
                   <div class="col-3">
                     <div class="p-form__control">
-                      <input id="material-quantity" type="number" name="material-quantity" placeholder="0" />
+                      <input id="material-quantity" type="number" name="material-quantity" placeholder="1" min="1" max="100" />
                     </div>
                   </div>
                   <div class="col-1">
-                    <button id="add-material" class="p-button has-icon u-float-right u-align-center" onclick="addMaterial(event)" name="add-material">
+                    <button id="add-material" class="p-button has-icon full-width is-inline u-float-right" onclick="addMaterial(event)" name="add-material">
                       <i class="p-icon--plus"></i>
                     </button>
                   </div>

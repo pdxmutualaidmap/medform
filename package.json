@@ -12,5 +12,8 @@
     "serverless-cloudfront-invalidate": "1.11.0",
     "serverless-domain-manager": "6.0.3",
     "serverless-s3-sync": "3.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }
