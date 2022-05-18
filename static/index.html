@@ -13,12 +13,13 @@
         <h2>Med Tent Care Form</h2>
         <fieldset>
           <div class="p-form__group row">
+            <datalist id="patient-datalist"></datalist>
             <div class="col-4">
               <label class="p-form__label" for="patient-info">Patient Information</label>
             </div>
             <div class="col-8">
               <div class="p-form__control">
-                <input type="text" id="patient-info" name="patient-info" placeholder="Patient Information" autocomplete="name">
+                <input type="text" id="patient-info" name="patient-info" list="patient-datalist" placeholder="Patient Information" autocomplete="name">
               </div>
             </div>
           </div>
@@ -132,6 +133,9 @@
           </div>
         </div>
       </form>
+    </div>
+    <div id="loading-screen" class="loading-visible">
+      <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
     </div>
   </body>
   <script src="medform.js"></script>

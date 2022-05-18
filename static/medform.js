@@ -1,3 +1,42 @@
+const PAGE_ELEMENTS = {}
+
+const populatePageElementVars = () => {
+
+  PAGE_ELEMENTS.SPINNER = {
+    CONTAINER: document.getElementById('loading-screen')
+  }
+
+  PAGE_ELEMENTS.CALENDAR = {
+    ADD_BUTTON: document.getElementById('add-calendar-btn'),
+    CONTAINER: document.getElementById('calendar-inputs'),
+    EVENT_DATETIME: document.getElementById('follow-up-datetime'),
+    EVENT_LOCATION: document.getElementById('follow-up-location'),
+    EVENT_MARKER: document.getElementById('add-calendar-event-marker'),
+    EVENT_TITLE: document.getElementById('follow-up-title'),
+    REMOVE_BUTTON: document.getElementById('remove-calendar-btn')
+  }
+
+  PAGE_ELEMENTS.FORM = {
+    CARE_NOTES: document.getElementById('care-notes'),
+    FOLLOW_UP_NOTES: document.getElementById('follow-up-notes'),
+    PATIENT_DATALIST: document.getElementById('patient-datalist'),
+    PATIENT_INFO: document.getElementById('patient-info')
+  }
+
+  PAGE_ELEMENTS.MATERIALS = {
+    DATALIST: document.getElementById('materials-datalist'),
+    NAME_INPUT: document.getElementById('material-name'),
+    QUANTITY_INPUT: document.getElementById('material-quantity'),
+    TABLE_BODY: document.getElementById('materials-used-table-body')
+  }
+}
+
+const preventEventDefault = (event) => {
+  if (event && event.preventDefault) {
+    event.preventDefault()
+  }
+}
+
 const getDefaultDate = () => {
   const oneWeekLater = new Date()
   oneWeekLater.setDate(oneWeekLater.getDate() + 7)
@@ -17,25 +56,29 @@ const removeMaterialButton = () => {
   return button
 }
 
+const toggleSpinner = () => {
+  PAGE_ELEMENTS.SPINNER.CONTAINER.classList.toggle('loading-hidden')
+  PAGE_ELEMENTS.SPINNER.CONTAINER.classList.toggle('loading-visible')
+}
+
+const setCalendarEventDefaults = () => {
+  PAGE_ELEMENTS.CALENDAR.EVENT_DATETIME.value = getDefaultDate()
+}
+
 const showCalendarInputs = (event) => {
-  if (event) {
-    event.preventDefault()
-  }
-  document.getElementById('calendar-inputs').style.display = 'inherit'
-  document.getElementById('remove-calendar-btn').style.display = 'inherit'
-  document.getElementById('add-calendar-btn').style.display = 'none'
-  document.getElementById('add-calendar-event-marker').checked = true
-  document.getElementById('follow-up-datetime').value = getDefaultDate()
+  preventEventDefault(event)
+  PAGE_ELEMENTS.CALENDAR.CONTAINER.style.display = 'inherit'
+  PAGE_ELEMENTS.CALENDAR.REMOVE_BUTTON.style.display = 'inherit'
+  PAGE_ELEMENTS.CALENDAR.ADD_BUTTON.style.display = 'none'
+  PAGE_ELEMENTS.CALENDAR.EVENT_MARKER.checked = true
 }
 
 const addMaterial = (event) => {
-  if (event) {
-    event.preventDefault()
-  }
-  const tableBody = document.getElementById('materials-used-table-body')
+  preventEventDefault(event)
+  const tableBody = PAGE_ELEMENTS.MATERIALS.TABLE_BODY
   const tableRow = document.createElement('tr')
-  const materialName = document.getElementById('material-name')
-  const materialQuantity = document.getElementById('material-quantity')
+  const materialName = PAGE_ELEMENTS.MATERIALS.NAME_INPUT
+  const materialQuantity = PAGE_ELEMENTS.MATERIALS.QUANTITY_INPUT
   if (!materialName.value || !materialQuantity.value) return
   const materialNameDataElement = document.createElement('td')
   materialNameDataElement.classList.add('materialData')
@@ -50,7 +93,7 @@ const addMaterial = (event) => {
 }
 
 const addMaterialsOptions = () => {
-  const datalist = document.getElementById('materials-datalist')
+  const datalist = PAGE_ELEMENTS.MATERIALS.DATALIST
   constants.materials.medical.forEach(item => {
     const itemElem = document.createElement('option')
     itemElem.text = item
@@ -60,28 +103,24 @@ const addMaterialsOptions = () => {
 }
 
 const clearCalendarInputs = (event) => {
-  if (event) {
-    event.preventDefault()
-  }
-  document.getElementById('follow-up-title').value = 'Follow Up Event'
-  document.getElementById('follow-up-datetime').value = getDefaultDate()
-  document.getElementById('follow-up-location').value = 'JBL'
-  document.getElementById('add-calendar-event-marker').checked = false
-  document.getElementById('calendar-inputs').style.display = 'none'
-  document.getElementById('remove-calendar-btn').style.display = 'none'
-  document.getElementById('add-calendar-btn').style.display = 'inherit'
+  preventEventDefault(event)
+  PAGE_ELEMENTS.CALENDAR.EVENT_TITLE.value = 'Follow Up Event'
+  PAGE_ELEMENTS.CALENDAR.EVENT_DATETIME.value = getDefaultDate()
+  PAGE_ELEMENTS.CALENDAR.EVENT_LOCATION.value = 'JBL'
+  PAGE_ELEMENTS.CALENDAR.EVENT_MARKER.checked = false
+  PAGE_ELEMENTS.CALENDAR.CONTAINER.style.display = 'none'
+  PAGE_ELEMENTS.CALENDAR.REMOVE_BUTTON.style.display = 'none'
+  PAGE_ELEMENTS.CALENDAR.ADD_BUTTON.style.display = 'inherit'
 }
 
 const clearForm = (event) => {
-  if (event) {
-    event.preventDefault()
-  }
-  document.getElementById('care-notes').value = null
-  document.getElementById('follow-up-notes').value = null
-  document.getElementById('material-name').value = null
-  document.getElementById('material-quantity').value = null
-  document.getElementById('patient-info').value = null
-  const tableBody = document.getElementById('materials-used-table-body')
+  preventEventDefault(event)
+  PAGE_ELEMENTS.FORM.PATIENT_INFO.value = null
+  PAGE_ELEMENTS.FORM.CARE_NOTES.value = null
+  PAGE_ELEMENTS.FORM.FOLLOW_UP_NOTES.value = null
+  PAGE_ELEMENTS.MATERIALS.NAME_INPUT.value = null
+  PAGE_ELEMENTS.MATERIALS.QUANTITY_INPUT.value = null
+  const tableBody = PAGE_ELEMENTS.MATERIALS.TABLE_BODY
   while (tableBody.firstChild) {
     tableBody.removeChild(tableBody.firstChild)
   }
@@ -90,20 +129,20 @@ const clearForm = (event) => {
 
 const createRequestBody = () => {
   const requestBody = {
-    patientInfo: document.getElementById('patient-info').value,
-    careNotes: document.getElementById('care-notes').value,
+    patientInfo: PAGE_ELEMENTS.FORM.PATIENT_INFO.value,
+    careNotes: PAGE_ELEMENTS.FORM.CARE_NOTES.value,
     followUp: {
-      notes: document.getElementById('follow-up-notes').value
+      notes: PAGE_ELEMENTS.FORM.FOLLOW_UP_NOTES.value
     },
     materials: []
   }
-  if (document.getElementById('add-calendar-event-marker').checked) {
+  if (PAGE_ELEMENTS.CALENDAR.EVENT_MARKER.checked) {
     requestBody.followUp.createCalendarEvent = true
-    requestBody.followUp.title = document.getElementById('follow-up-title').value
-    requestBody.followUp.location = document.getElementById('follow-up-location').value
-    requestBody.followUp.start_dt = document.getElementById('follow-up-datetime').value
+    requestBody.followUp.title = PAGE_ELEMENTS.CALENDAR.EVENT_TITLE.value
+    requestBody.followUp.location = PAGE_ELEMENTS.CALENDAR.EVENT_LOCATION.value
+    requestBody.followUp.start_dt = PAGE_ELEMENTS.CALENDAR.EVENT_DATETIME.value
   }
-  document.getElementById('materials-used-table-body').querySelectorAll('tr').forEach(row => {
+  PAGE_ELEMENTS.MATERIALS.TABLE_BODY.querySelectorAll('tr').forEach(row => {
     requestBody.materials.push({
       materialData: row.querySelector('.materialData').textContent,
       materialQuantity: row.querySelector('.materialQuantity').textContent
@@ -112,12 +151,39 @@ const createRequestBody = () => {
   return requestBody
 }
 
-const initPage = () => {
+const initPage = async () => {
+  populatePageElementVars()
   addMaterialsOptions()
+  await populatePatientDatalist()
+  toggleSpinner()
+}
+
+const getPatientList = async () => {
+  try {
+    const response = await fetch('https://medform-api.pdxmutualaidmap.org/api/patient', {
+      method: 'GET',
+      mode: 'cors'
+    })
+    return response.json()
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const populatePatientDatalist = async () => {
+  const patients = await getPatientList()
+  const datalist = PAGE_ELEMENTS.FORM.PATIENT_DATALIST
+  patients.data.forEach(item => {
+    const itemElem = document.createElement('option')
+    itemElem.text = item
+    itemElem.value = item
+    datalist.appendChild(itemElem)
+  })
 }
 
 const submitForm = async (event) => {
-  event.preventDefault()
+  preventEventDefault(event)
+  toggleSpinner()
   const requestBody = createRequestBody()
   try {
     await fetch('https://medform-api.pdxmutualaidmap.org/api/care', {
@@ -128,6 +194,8 @@ const submitForm = async (event) => {
     clearForm()
   } catch (e) {
     console.error(e)
+  } finally {
+    toggleSpinner()
   }
 }
 
@@ -140,6 +208,10 @@ const constants = {
       "addCare": {
         "method": "post",
         "path": "/care"
+      },
+      "getPatients": {
+        "method": "get",
+        "path": "/patient"
       }
     }
   },

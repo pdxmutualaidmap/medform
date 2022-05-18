@@ -36,9 +36,12 @@ provider:
     disableDefaultEndpoint: true
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    CARE_TABLE_NAME: ${env:MEDFORM_TABLE_NAME}
     DEBUG_ENABLED: ${env:DEBUG_ENABLED}
+    GOOGLE_API_KEY_NAME: ${env:GOOGLE_API_KEY_NAME}
+    INTEGRATE_GOOGLE_SHEETS: ${env:INTEGRATE_GOOGLE_SHEETS}
     INTEGRATE_TEAMUP_CALENDAR: ${env:INTEGRATE_TEAMUP_CALENDAR}
+    MEDFORM_SHEET_ID: ${env:MEDFORM_SHEET_ID}
+    MEDFORM_TABLE_NAME: ${env:MEDFORM_TABLE_NAME}
     MEDTENT_TEAMUP_CALENDAR_ID: ${env:MEDTENT_TEAMUP_CALENDAR_ID}
     MEDTENT_TEAMUP_MEDICAL_SUBCALENDAR_ID: ${env:MEDTENT_TEAMUP_MEDICAL_SUBCALENDAR_ID}
   iam:
@@ -54,6 +57,7 @@ provider:
           Resource:
             - 'arn:aws:secretsmanager:${env:AWS_REGION}:${env:AWS_ACCOUNT_ID}:secret:medform-2fa-seed*'
             - 'arn:aws:secretsmanager:${env:AWS_REGION}:${env:AWS_ACCOUNT_ID}:secret:medtent-followup-calendar-teamup-api-key*'
+            - 'arn:aws:secretsmanager:${env:AWS_REGION}:${env:AWS_ACCOUNT_ID}:secret:medformbot-googleapis-key*'
           Action: 'secretsmanager:GetSecretValue'
 
 functions:
@@ -61,6 +65,10 @@ functions:
     handler: src/care/addCareRecord.handler
     events:
       - httpApi: 'POST /care'
+  get-patient-list:
+    handler: src/care/getPatientList.handler
+    events:
+      - httpApi: 'GET /patient'
 
 resources:
   - ${file(resources/cf-oai.yml)}

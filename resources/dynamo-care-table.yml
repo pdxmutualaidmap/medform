@@ -4,11 +4,11 @@ Resources:
     Properties:
       AttributeDefinitions:
         -
-          AttributeName: PatientInfo
+          AttributeName: CareId
           AttributeType: S
       BillingMode: PAY_PER_REQUEST
       KeySchema:
         -
-          AttributeName: PatientInfo
+          AttributeName: CareId
           KeyType: HASH
-      TableName: MedformCare
+      TableName: ${env:MEDFORM_TABLE_NAME}
